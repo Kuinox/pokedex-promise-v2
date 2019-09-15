@@ -1,6 +1,3 @@
-const axios = require('axios')
-const cache = require('memory-cache')
-
 const { values } = require('./default.js')
 const { handleError } = require('./error.js')
 
@@ -9,38 +6,20 @@ let options = {
     timeout: values.timeout
 }
 
-exports.getJSON = async (url, cb) => {
+exports.getJSON = async function getJSON(axios, url, cb) {
     try {
-        // retrive possible content from volatile memory
-        const cachedResult = cache.get(url);
-        if (cachedResult !== null) {
-            if (cb) {
-                // call callback without errors
-                cb(cachedResult, false);
-            }
-            return cachedResult
+        response = await axios.get(url, options)
+        // if there is an error
+        if (response.statusCode !== undefined && response.statusCode !== 200) {
+            handleError(response, cb)
         } else {
-            response = await axios.get(url, options)
-            // if there is an error
-            if (response.statusCode !== undefined && response.statusCode !== 200) {
-                handleError(response, cb)
+            response = response.data
+            // if a callback is present
+            if (cb) {
+                // call it, without errors
+                cb(response, false);
             } else {
-                // if everything was good
-                // cache the object in volatile memory
-                // only if cacheLimit > 0
-                response = response.data
-                
-                if (values.cacheLimit > 0) {
-                    cache.put(url, response, values.cacheLimit);
-                }
-                
-                // if a callback is present
-                if (cb) {
-                    // call it, without errors
-                    cb(response, false);
-                } else {
-                    return response;
-                }
+                return response;
             }
         }
     } catch (error) {

@@ -10,28 +10,28 @@ const { handleError } = require('./error.js')
 class Pokedex {
     constructor(config) {
         configurator.setPokedexConfiguration(config);
-        
+
         // add to Pokedex.prototype all our endpoint functions
         endpoints.forEach(endpoint => {
             this[endpoint[0]] = async (input, cb) => {
                 try {
                     const mapper = async name => {
-                        const queryRes = await getJSON(`${values.protocol}${values.hostName}${values.versionPath}${endpoint[1]}/${name}/`)
+                        const queryRes = await getJSON(values.axiosInstance, `${values.protocol}${values.hostName}${values.versionPath}${endpoint[1]}/${name}/`)
                         return queryRes;
                     };
-    
+
                     if (input) {
-    
+
                         // if the user has submitted a Name or an Id, return the Json promise
                         if (typeof input === 'number' || typeof input === 'string') {
-                            return getJSON(`${values.protocol}${values.hostName}${values.versionPath}${endpoint[1]}/${input}/`, cb); 
+                            return getJSON(values.axiosInstance, `${values.protocol}${values.hostName}${values.versionPath}${endpoint[1]}/${input}/`, cb, values.axiosInstance);
                         }
-    
+
                         // if the user has submitted an Array
                         // return a new promise which will resolve when all getJSON calls are ended
                         else if (typeof input === 'object') {
                             // fetch data asynchronously to be faster
-                            const mappedResults = await pMap(input, mapper, {concurrency: 4})
+                            const mappedResults = await pMap(input, mapper, { concurrency: 4 })
                             if (cb) {
                                 cb(mappedResults);
                             }
@@ -48,7 +48,7 @@ class Pokedex {
             this[rootEndpoint[0]] = async (config, cb) => {
                 try {
                     configurator.setRootEndpointConfiguration(config);
-                    return getJSON(`${values.protocol}${values.hostName}${values.versionPath}${rootEndpoint[1]}?limit=${values.limit}&offset=${values.offset}`, cb)
+                    return getJSON(values.axiosInstance, `${values.protocol}${values.hostName}${values.versionPath}${rootEndpoint[1]}?limit=${values.limit}&offset=${values.offset}`, cb)
                 } catch (error) {
                     handleError(error, cb)
                 }
@@ -60,9 +60,9 @@ class Pokedex {
         let result
         try {
             if (typeof path === 'string') {
-                result = getJSON(path)
+                result = getJSON(values.axiosInstance, path)
             } else if (typeof path === 'object') {
-                result = Promise.all(path.map(p => getJSON(p)));
+                result = Promise.all(path.map(p => getJSON(values.axiosInstance, p)));
             } else {
                 throw 'String or Array required'
             }

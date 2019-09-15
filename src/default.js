@@ -1,3 +1,4 @@
+const axios = require('axios');
 const values = {};
 
 values.protocol = 'https';
@@ -6,7 +7,7 @@ values.versionPath = '/api/v2/';
 values.offset = 0;
 values.limit = 100000;
 values.timeout = 20 * 1000; // 20 seconds
-values.cacheLimit = 1000000 * 1000; // 11 days
+values.axiosInstance = axios.default;
 
 values.setProtocol = newProtocol => {
     values.protocol = newProtocol;
@@ -26,8 +27,9 @@ values.setLimit = newLimit => {
 values.setTimeout = newTimeout => {
     values.timeout = newTimeout;
 }
-values.setCacheLimit = newCacheLimit => {
-    values.cacheLimit = newCacheLimit;
+
+values.setAxiosInstance = axiosInstance => {
+    values.axiosInstance = axiosInstance;
 }
 
 exports.values = values

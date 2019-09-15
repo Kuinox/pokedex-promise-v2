@@ -101,7 +101,7 @@ describe("pokedex", function() {
   describe(".getLanguagesList() with callback, 0 cached and offset", function() {
     var resultAsCallback;
     before(function(done) {
-      promise = P.getLanguagesList({offset: 2, cacheLimit: 0}, function(data) {
+      promise = P.getLanguagesList({offset: 2}, function(data) {
         resultAsCallback = data;
         done();
       });
@@ -114,7 +114,7 @@ describe("pokedex", function() {
   describe(".getLanguagesList() with callback, negative cached and offset", function() {
     var resultAsCallback;
     before(function(done) {
-      promise = P.getLanguagesList({offset: 2, cacheLimit: -1}, function(data) {
+      promise = P.getLanguagesList({offset: 2}, function(data) {
         resultAsCallback = data;
         done();
       });

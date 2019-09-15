@@ -1,3 +1,5 @@
+Simple fork removing the caching and allow to configure with an axios instance.
+
 # pokedex-promise-v2 <img src='https://veekun.com/dex/media/pokemon/global-link/1.png' height=50px/>
 
 [![npm version](https://badge.fury.io/js/pokedex-promise-v2.svg)](https://badge.fury.io/js/pokedex-promise-v2)
@@ -83,7 +85,7 @@ var P = new Pokedex();
 
 ## Configuration
 
-Pass an Object to Pokedex in order to configure it. Available options: `protocol`, `hostName`, `versionPath`, `cacheLimit` in ms, `timeout` in ms.
+Pass an Object to Pokedex in order to configure it. Available options: `protocol`, `hostName`, `versionPath`, `timeout` in ms.
 Any option is optional :smile:. If no Object is passed, the Pokedex will be initialized to grab data from pokeapi.co using http with 20 seconds timeout and caching resources for 11 days. HTTPS is the default protocol.
 
 ```js
@@ -92,7 +94,6 @@ var options = {
   protocol: 'https',
   hostName: 'localhost:443',
   versionPath: '/api/v2/',
-  cacheLimit: 100 * 1000, // 100s
   timeout: 5 * 1000 // 5s
 }
 var P = new Pokedex(options);

@@ -14,14 +14,14 @@ exports.setPokedexConfiguration = config => {
         if (config.hasOwnProperty('timeout')) {
             values.setTimeout(config.timeout)
         }
-        if (config.hasOwnProperty('cacheLimit')) {
-            values.setCacheLimit(config.cacheLimit)
+        if (config.hasOwnProperty('axiosInstance')) {
+            values.setAxiosInstance(config.axiosInstance);
         }
     }
 }
 
 exports.setRootEndpointConfiguration = config => {
-	if (config) {
+    if (config) {
         if (config.offset) {
             values.setOffset(config.offset)
         }
